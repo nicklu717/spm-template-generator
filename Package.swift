@@ -1,63 +1,69 @@
 // swift-tools-version: 5.7
 
 // MARK: - Modules Declared by Users
-enum Module {
+enum PackageModule {
     case `internal`(Internal)
     case external(External)
     
-    enum Internal: CaseIterable {}
-    enum External: CaseIterable {}
-}
-
-extension Module.Internal {
-    var name: String {
-        switch self {}
-    }
-    
-    var dependencies: [Module] {
-        switch self {}
-    }
-    
-    var path: String {
-        switch self {
-        default:
-            return "\(name)/"
+    enum Internal: CaseIterable {
+        // TODO: Add module cases here
+        
+        var module: Module {
+            switch self {}
         }
     }
     
-    enum ProductType {
-        case library, executable
-    }
-    var productType: ProductType {
-        switch self {}
-    }
-    
-    var hasResources: Bool {
-        switch self {
-        default:
-            return false
+    enum External: CaseIterable {
+        // Add external module cases here (if any)
+        
+        var module: Module {
+            switch self {}
         }
-    }
-    
-    var hasTests: Bool {
-        switch self {}
     }
 }
 
-extension Module.External {
-    var name: String {
-        switch self {}
+extension PackageModule.Internal {
+    class Module {
+        enum ProductType {
+            case library, executable
+        }
+        
+        let name: String
+        let dependencies: [PackageModule]
+        let path: String
+        let productType: ProductType
+        let hasTests: Bool
+        let hasResources: Bool
+        
+        init(name: String, dependencies: [PackageModule] = [], path: String? = nil, productType: ProductType, hasTests: Bool, hasResources: Bool = false) {
+            self.name = name
+            self.dependencies = dependencies
+            self.path = path ?? "\(name)/"
+            self.productType = productType
+            self.hasTests = hasTests
+            self.hasResources = hasResources
+        }
     }
-    
-    var packageInfo: (name: String, url: String, tag: String) {
-        switch self {}
+}
+
+extension PackageModule.External {
+    class Module {
+        typealias PackageInfo = (name: String, url: String, tag: String)
+        
+        let name: String
+        let packageInfo: PackageInfo
+        
+        init(name: String, packageInfo: PackageInfo) {
+            self.name = name
+            self.packageInfo = packageInfo
+        }
     }
 }
 
 // MARK: - Generate Package
 import PackageDescription
 
-extension Module.Internal {
+extension PackageModule.Internal.Module {
     var product: Product {
         switch productType {
         case .library:
@@ -70,10 +76,10 @@ extension Module.Internal {
     var target: Target {
         let dependencies: [Target.Dependency] = dependencies.map { dependency in
             switch dependency {
-            case .internal(let internalModule):
-                return .byName(name: internalModule.name)
-            case .external(let externalModule):
-                return externalModule.product
+            case .internal(let `internal`):
+                return .byName(name: `internal`.module.name)
+            case .external(let external):
+                return external.module.product
             }
         }
         let path = "Sources/\(path)"
@@ -96,7 +102,7 @@ extension Module.Internal {
     }
 }
 
-extension Module.External {
+extension PackageModule.External.Module {
     var package: Package.Dependency {
         .package(url: packageInfo.url, exact: Version(stringLiteral: packageInfo.tag))
     }
@@ -106,10 +112,11 @@ extension Module.External {
     }
 }
 
-let internalModules = Module.Internal.allCases
-let externalModules = Module.External.allCases
+let internalModules = PackageModule.Internal.allCases.map(\.module)
+let externalModules = PackageModule.External.allCases.map(\.module)
+
 let package = Package(
-    name: "Modules",
+    name: "spm-template-generator",
     platforms: [.macOS(.v13)],
     products: internalModules.map(\.product),
     dependencies: externalModules.map(\.package),
