@@ -6,10 +6,17 @@ enum PackageModule {
     case external(External)
     
     enum Internal: CaseIterable {
-        // TODO: Add module cases here
+        case spmTemplateGenerator
         
         var module: Module {
-            switch self {}
+            switch self {
+            case .spmTemplateGenerator:
+                Module(
+                    name: "spm-template-generator",
+                    productType: .executable,
+                    hasTests: false
+                )
+            }
         }
     }
     
