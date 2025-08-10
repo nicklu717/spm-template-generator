@@ -19,7 +19,10 @@ extension Module.Internal {
     }
     
     var path: String {
-        switch self {}
+        switch self {
+        default:
+            return "\(name)/"
+        }
     }
     
     enum ProductType {
@@ -30,7 +33,10 @@ extension Module.Internal {
     }
     
     var hasResources: Bool {
-        switch self {}
+        switch self {
+        default:
+            return false
+        }
     }
     
     var hasTests: Bool {
