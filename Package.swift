@@ -13,6 +13,9 @@ enum PackageModule {
             case .spmTemplateGenerator:
                 Module(
                     name: "spm-template-generator",
+                    dependencies: [
+                        .external(.swiftArgumentParser)
+                    ],
                     productType: .executable,
                     hasTests: false
                 )
@@ -21,10 +24,20 @@ enum PackageModule {
     }
     
     enum External: CaseIterable {
-        // Add external module cases here (if any)
+        case swiftArgumentParser
         
         var module: Module {
-            switch self {}
+            switch self {
+            case .swiftArgumentParser:
+                Module(
+                    name: "ArgumentParser",
+                    packageInfo: (
+                        name: "swift-argument-parser",
+                        url: "https://github.com/apple/swift-argument-parser",
+                        tag: "1.6.1"
+                    )
+                )
+            }
         }
     }
 }
