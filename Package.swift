@@ -1,18 +1,17 @@
 // swift-tools-version: 5.7
 
-// MARK: - Modules Declared by Users
 enum PackageModule {
     case `internal`(Internal)
     case external(External)
     
     enum Internal: CaseIterable {
-        case spmTemplateGenerator
+        case modulePackageManager
         
         var module: Module {
             switch self {
-            case .spmTemplateGenerator:
+            case .modulePackageManager:
                 Module(
-                    name: "spm-template-generator",
+                    name: "swift-module-package-manager",
                     dependencies: [
                         .external(.swiftArgumentParser)
                     ],
@@ -42,6 +41,7 @@ enum PackageModule {
     }
 }
 
+// MARK: - Module Definitions
 extension PackageModule.Internal {
     class Module {
         enum ProductType {
@@ -136,7 +136,7 @@ let internalModules = PackageModule.Internal.allCases.map(\.module)
 let externalModules = PackageModule.External.allCases.map(\.module)
 
 let package = Package(
-    name: "spm-template-generator",
+    name: "swift-module-package-manager",
     platforms: [.macOS(.v13)],
     products: internalModules.map(\.product),
     dependencies: externalModules.map(\.package),
