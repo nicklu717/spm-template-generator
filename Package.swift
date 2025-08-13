@@ -56,10 +56,10 @@ extension PackageModule.Internal {
         let hasTests: Bool
         let hasResources: Bool
         
-        init(name: String, dependencies: [PackageModule], path: String? = nil, productType: ProductType = .library, hasTests: Bool, hasResources: Bool) {
+        init(name: String, dependencies: [PackageModule], intermediateDirectoryPath: String = "", productType: ProductType = .library, hasTests: Bool, hasResources: Bool) {
             self.name = name
             self.dependencies = dependencies
-            self.path = path ?? "\(name)/"
+            self.path = "\(intermediateDirectoryPath)\(name)/"
             self.productType = productType
             self.hasTests = hasTests
             self.hasResources = hasResources
@@ -138,9 +138,10 @@ let externalModules = PackageModule.External.allCases.map(\.module)
 
 let package = Package(
     name: "swift-module-package-manager",
-    platforms: [.macOS(.v13)],
+    platforms: [.iOS(.v16), .macOS(.v13)],
     products: internalModules.map(\.product),
     dependencies: externalModules.map(\.package),
     targets: internalModules.map(\.target) + internalModules.compactMap(\.testTarget)
 )
+
 
