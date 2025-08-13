@@ -31,7 +31,7 @@ enum PackageModule {
             case .swiftArgumentParser:
                 Module(
                     name: "ArgumentParser",
-                    packageInfo: (
+                    packageInfo: .init(
                         name: "swift-argument-parser",
                         url: "https://github.com/apple/swift-argument-parser",
                         tag: "1.6.1"
@@ -69,7 +69,11 @@ extension PackageModule.Internal {
 
 extension PackageModule.External {
     class Module {
-        typealias PackageInfo = (name: String, url: String, tag: String)
+        struct PackageInfo {
+            let name: String
+            let url: String
+            let tag: String
+        }
         
         let name: String
         let packageInfo: PackageInfo
@@ -143,5 +147,3 @@ let package = Package(
     dependencies: externalModules.map(\.package),
     targets: internalModules.map(\.target) + internalModules.compactMap(\.testTarget)
 )
-
-
