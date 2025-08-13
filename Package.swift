@@ -16,7 +16,8 @@ enum PackageModule {
                         .external(.swiftArgumentParser)
                     ],
                     productType: .executable,
-                    hasTests: false
+                    hasTests: false,
+                    hasResources: false
                 )
             }
         }
@@ -55,7 +56,7 @@ extension PackageModule.Internal {
         let hasTests: Bool
         let hasResources: Bool
         
-        init(name: String, dependencies: [PackageModule] = [], path: String? = nil, productType: ProductType, hasTests: Bool, hasResources: Bool = false) {
+        init(name: String, dependencies: [PackageModule], path: String? = nil, productType: ProductType = .library, hasTests: Bool, hasResources: Bool) {
             self.name = name
             self.dependencies = dependencies
             self.path = path ?? "\(name)/"
@@ -142,3 +143,4 @@ let package = Package(
     dependencies: externalModules.map(\.package),
     targets: internalModules.map(\.target) + internalModules.compactMap(\.testTarget)
 )
+
