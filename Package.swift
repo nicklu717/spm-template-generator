@@ -6,13 +6,22 @@ enum PackageModule {
     
     enum Internal: CaseIterable {
         case modulePackageManager
+        case modulePackageManagerCLI
         
         var module: Module {
             switch self {
             case .modulePackageManager:
                 Module(
-                    name: "swift-module-package-manager",
+                    name: "SwiftModulePackageManager",
+                    dependencies: [],
+                    hasResources: true,
+                    testsOption: .disabled
+                )
+            case .modulePackageManagerCLI:
+                Module(
+                    name: "swift-module-package-manager-cli",
                     dependencies: [
+                        .internal(.modulePackageManager),
                         .external(.swiftArgumentParser)
                     ],
                     productType: .executable,
@@ -131,7 +140,7 @@ extension PackageModule.Internal.Module {
                 name: "\(name)Tests",
                 dependencies: [.byName(name: name)],
                 path: path,
-                resources: hasResourses ? [.process("\(path)/Resources")] : nil
+                resources: hasResourses ? [.process("Resources")] : nil
             )
         case .disabled:
             return nil

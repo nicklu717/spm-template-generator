@@ -1,0 +1,40 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-module-package-manager}",
+            "name": "Debug swift-module-package-manager",
+            "program": "${workspaceFolder:swift-module-package-manager}/.build/debug/swift-module-package-manager",
+            "preLaunchTask": "swift: Build Debug swift-module-package-manager"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-module-package-manager}",
+            "name": "Release swift-module-package-manager",
+            "program": "${workspaceFolder:swift-module-package-manager}/.build/release/swift-module-package-manager",
+            "preLaunchTask": "swift: Build Release swift-module-package-manager"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-module-package-manager}",
+            "name": "Debug swift-module-package-manager-cli",
+            "program": "${workspaceFolder:swift-module-package-manager}/.build/debug/swift-module-package-manager-cli",
+            "preLaunchTask": "swift: Build Debug swift-module-package-manager-cli"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-module-package-manager}",
+            "name": "Release swift-module-package-manager-cli",
+            "program": "${workspaceFolder:swift-module-package-manager}/.build/release/swift-module-package-manager-cli",
+            "preLaunchTask": "swift: Build Release swift-module-package-manager-cli"
+        }
+    ]
+}
