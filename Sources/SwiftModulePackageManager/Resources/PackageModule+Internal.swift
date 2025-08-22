@@ -1,26 +1,25 @@
 extension PackageModule.Internal {
     class Module {
         enum ProductType {
-            case library, executable
+            case library(hasResources: Bool)
+            case executable
         }
         
         let name: String
         let dependencies: [PackageModule]
         let path: String
         let productType: ProductType
-        let hasResources: Bool
-        let testsOption: TestsOption
+        let unitTestsOption: UnitTestsOption
         
-        init(name: String, dependencies: [PackageModule], intermediateDirectoryPath: String = "", productType: ProductType = .library, hasResources: Bool, testsOption: TestsOption) {
+        init(name: String, dependencies: [PackageModule], intermediateDirectoryPath: String = "", productType: ProductType, unitTestsOption: UnitTestsOption) {
             self.name = name
             self.dependencies = dependencies
             self.path = "\(intermediateDirectoryPath)\(name)/"
             self.productType = productType
-            self.hasResources = hasResources
-            self.testsOption = testsOption
+            self.unitTestsOption = unitTestsOption
         }
         
-        enum TestsOption {
+        enum UnitTestsOption {
             case enabled(hasResourses: Bool)
             case disabled
         }

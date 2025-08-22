@@ -14,8 +14,8 @@ enum PackageModule {
                 Module(
                     name: "SwiftModulePackageManager",
                     dependencies: [],
-                    hasResources: true,
-                    testsOption: .disabled
+                    productType: .library(hasResources: true),
+                    unitTestsOption: .disabled
                 )
             case .modulePackageManagerCLI:
                 Module(
@@ -25,8 +25,7 @@ enum PackageModule {
                         .external(.swiftArgumentParser)
                     ],
                     productType: .executable,
-                    hasResources: false,
-                    testsOption: .disabled
+                    unitTestsOption: .disabled
                 )
             }
         }
@@ -55,26 +54,25 @@ enum PackageModule {
 extension PackageModule.Internal {
     class Module {
         enum ProductType {
-            case library, executable
+            case library(hasResources: Bool)
+            case executable
         }
         
         let name: String
         let dependencies: [PackageModule]
         let path: String
         let productType: ProductType
-        let hasResources: Bool
-        let testsOption: TestsOption
+        let unitTestsOption: UnitTestsOption
         
-        init(name: String, dependencies: [PackageModule], intermediateDirectoryPath: String = "", productType: ProductType = .library, hasResources: Bool, testsOption: TestsOption) {
+        init(name: String, dependencies: [PackageModule], intermediateDirectoryPath: String = "", productType: ProductType, unitTestsOption: UnitTestsOption) {
             self.name = name
             self.dependencies = dependencies
             self.path = "\(intermediateDirectoryPath)\(name)/"
             self.productType = productType
-            self.hasResources = hasResources
-            self.testsOption = testsOption
+            self.unitTestsOption = unitTestsOption
         }
         
-        enum TestsOption {
+        enum UnitTestsOption {
             case enabled(hasResourses: Bool)
             case disabled
         }
@@ -127,18 +125,17 @@ extension PackageModule.Internal.Module {
             }
         }
         let path = "Sources/\(path)"
-        let resources: [Resource]? = hasResources ? [.process("Resources")] : nil
-        
         switch productType {
-        case .library:
+        case .library(let hasResources):
+            let resources: [Resource]? = hasResources ? [.process("Resources")] : nil
             return .target(name: name, dependencies: dependencies, path: path, resources: resources)
         case .executable:
-            return .executableTarget(name: name, dependencies: dependencies, path: path, resources: resources)
+            return .executableTarget(name: name, dependencies: dependencies, path: path)
         }
     }
     
     var testTarget: Target? {
-        switch testsOption {
+        switch unitTestsOption {
         case .enabled(let hasResourses):
             let path = "Tests/\(path)"
             return .testTarget(

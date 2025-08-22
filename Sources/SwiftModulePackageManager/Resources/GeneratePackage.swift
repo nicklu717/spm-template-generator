@@ -20,18 +20,17 @@ extension PackageModule.Internal.Module {
             }
         }
         let path = "Sources/\(path)"
-        let resources: [Resource]? = hasResources ? [.process("Resources")] : nil
-        
         switch productType {
-        case .library:
+        case .library(let hasResources):
+            let resources: [Resource]? = hasResources ? [.process("Resources")] : nil
             return .target(name: name, dependencies: dependencies, path: path, resources: resources)
         case .executable:
-            return .executableTarget(name: name, dependencies: dependencies, path: path, resources: resources)
+            return .executableTarget(name: name, dependencies: dependencies, path: path)
         }
     }
     
     var testTarget: Target? {
-        switch testsOption {
+        switch unitTestsOption {
         case .enabled(let hasResourses):
             let path = "Tests/\(path)"
             return .testTarget(
