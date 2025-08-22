@@ -3,7 +3,12 @@ extension PackageModule.External {
         struct PackageInfo {
             let name: String
             let url: String
-            let tag: String
+            let version: Version
+            
+            enum Version {
+                case tag(String)
+                case branch(String)
+            }
         }
         
         let name: String

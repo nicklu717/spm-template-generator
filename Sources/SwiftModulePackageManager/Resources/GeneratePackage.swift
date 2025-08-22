@@ -48,7 +48,12 @@ extension PackageModule.Internal.Module {
 
 extension PackageModule.External.Module {
     var package: Package.Dependency {
-        .package(url: packageInfo.url, exact: Version(stringLiteral: packageInfo.tag))
+        switch packageInfo.version {
+        case .tag(let tag):
+            return .package(url: packageInfo.url, exact: Version(stringLiteral: tag))
+        case .branch(let branch):
+            return .package(url: packageInfo.url, branch: branch)
+        }
     }
     
     var product: Target.Dependency {

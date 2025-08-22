@@ -43,7 +43,7 @@ enum PackageModule {
                     packageInfo: .init(
                         name: "swift-argument-parser",
                         url: "https://github.com/apple/swift-argument-parser",
-                        tag: "1.6.1"
+                        version: .tag("1.6.1")
                     )
                 )
             }
@@ -86,7 +86,12 @@ extension PackageModule.External {
         struct PackageInfo {
             let name: String
             let url: String
-            let tag: String
+            let version: Version
+            
+            enum Version {
+                case tag(String)
+                case branch(String)
+            }
         }
         
         let name: String
@@ -150,7 +155,12 @@ extension PackageModule.Internal.Module {
 
 extension PackageModule.External.Module {
     var package: Package.Dependency {
-        .package(url: packageInfo.url, exact: Version(stringLiteral: packageInfo.tag))
+        switch packageInfo.version {
+        case .tag(let tag):
+            return .package(url: packageInfo.url, exact: Version(stringLiteral: tag))
+        case .branch(let branch):
+            return .package(url: packageInfo.url, branch: branch)
+        }
     }
     
     var product: Target.Dependency {
