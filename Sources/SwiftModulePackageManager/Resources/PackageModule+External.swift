@@ -6,8 +6,13 @@ extension PackageModule.External {
             let version: Version
             
             enum Version {
-                case tag(String)
+                case tag(Tag)
                 case branch(String)
+                
+                enum Tag {
+                    case from(String)
+                    case exact(String)
+                }
             }
         }
         
